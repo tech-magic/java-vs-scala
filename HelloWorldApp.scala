@@ -61,45 +61,64 @@ class MusicStudent(name: String, dateOfBirth: Date)
     this.playPiano()
   }
 
+  override def getName(): String = "Maestro" + super.getName
+
 }
 
 object HelloWorldApp {
 
   def main(args: Array[String]): Unit = {
-    val student: Student = new MusicStudent("wimal", new Date())
-    student.doWork()
+    try {
+      val student: Student = new MusicStudent("wimal", new Date())
+      student.doWork()
 // Lists
-    val students: List[Student] = new ArrayList[Student]()
-    students.add(student)
-    val firstStudent: Student = students.get(0)
-    firstStudent.doWork()
+      val students: List[Student] = new ArrayList[Student]()
+      students.add(student)
+      val firstStudent: Student = students.get(0)
+      if (firstStudent == null) {
+        throw new IllegalArgumentException(
+          "Should have at least one student ...")
+      }
+      firstStudent.doWork()
 // Iterators
-    val it: Iterator[Student] = students.iterator()
-    while (it.hasNext) {
-      val next: Student = it.next()
-      next.doWork()
-    }
+      val it: Iterator[Student] = students.iterator()
+      while (it.hasNext) {
+        val next: Student = it.next()
+        next.doWork()
+      }
 // Maps
-    val studentMap: Map[String, List[Student]] =
-      new HashMap[String, List[Student]]()
-    studentMap.put("musicStudents", students)
-    val firstMusicStudent: Student = studentMap.get("musicStudents").get(0)
-    firstMusicStudent.doWork()
+      val studentMap: Map[String, List[Student]] =
+        new HashMap[String, List[Student]]()
+      studentMap.put("musicStudents", students)
+      val firstMusicStudent: Student = studentMap.get("musicStudents").get(0)
+      firstMusicStudent.doWork()
 // Arrays
-    val studentsArray: Array[Student] = Array.ofDim[Student](1)
-    studentsArray(0) = student
-    studentsArray(0).doWork()
+      val studentsArray: Array[Student] = Array.ofDim[Student](1)
+      studentsArray(0) = student
+      studentsArray(0).doWork()
 // 2D Arrays
-    val students2DArray: Array[Array[Student]] = Array.ofDim[Student](1, 1)
-    students2DArray(0)(0) = student
-    println(students2DArray(0)(0).getName)
+      val students2DArray: Array[Array[Student]] = Array.ofDim[Student](1, 1)
+      students2DArray(0)(0) = student
+      println(students2DArray(0)(0).getName)
 // Lambda
-    val result: List[Student] = students
-      .stream()
-      .filter((lmbStudent) => ("wimal" == lmbStudent.getName))
-      .collect(Collectors.toList())
-    println(result.size)
-    println(Student.getStudentCount)
+      val result: List[Student] = students
+        .stream()
+        .filter((lmbStudent) => ("wimal" == lmbStudent.getName))
+        .collect(Collectors.toList())
+      println(result.size)
+      println(Student.getStudentCount)
+    } catch {
+      case illex: IllegalArgumentException => {
+        illex.printStackTrace()
+        throw illex
+      }
+
+      case nex: NullPointerException => {
+        nex.printStackTrace()
+        throw nex
+      }
+
+    } finally println("In the finally block")
   }
 
 }

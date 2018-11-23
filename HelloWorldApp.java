@@ -65,54 +65,73 @@ class MusicStudent extends Student implements GuitarPlayer, PianoPlayer {
         this.playGuitar();
         this.playPiano();
     }
+
+    @Override
+    public String getName() {
+        return "Maestro" + super.getName();
+    }
 }
 
 class HelloWorldApp {
-    public static void main(String[] args) {
-        Student student = new MusicStudent("wimal", new Date());
-        student.doWork();
+    public static void main(String[] args) throws IllegalArgumentException, NullPointerException {
+        try {
+            Student student = new MusicStudent("wimal", new Date());
+            student.doWork();
 
-        // Lists
-        List<Student> students = new ArrayList();
-        students.add(student);
+            // Lists
+            List<Student> students = new ArrayList();
+            students.add(student);
 
-        Student firstStudent = students.get(0);
-        firstStudent.doWork();
+            Student firstStudent = students.get(0);
+            if (firstStudent == null) {
+                throw new IllegalArgumentException("Should have at least one student ...");
+            }
 
-        // Iterators
-        Iterator<Student> it = students.iterator();
-        while(it.hasNext()) {
-            Student next = it.next();
-            next.doWork();
+            firstStudent.doWork();
+
+            // Iterators
+            Iterator<Student> it = students.iterator();
+            while (it.hasNext()) {
+                Student next = it.next();
+                next.doWork();
+            }
+
+            // Maps
+            Map<String, List<Student>> studentMap = new HashMap();
+            studentMap.put("musicStudents", students);
+
+            Student firstMusicStudent = studentMap.get("musicStudents").get(0);
+            firstMusicStudent.doWork();
+
+            // Arrays
+            Student[] studentsArray = new Student[1];
+            studentsArray[0] = student;
+
+            studentsArray[0].doWork();
+
+            // 2D Arrays
+            Student[][] students2DArray = new Student[1][1];
+            students2DArray[0][0] = student;
+
+            System.out.println(students2DArray[0][0].getName());
+
+            // Lambda
+            List<Student> result = students.stream()
+                    .filter(lmbStudent -> ("wimal".equals(lmbStudent.getName())))
+                    .collect(Collectors.toList());
+
+            System.out.println(result.size());
+
+            System.out.println(Student.getStudentCount());
+        } catch (IllegalArgumentException illex) {
+            illex.printStackTrace();
+            throw illex;
+        } catch (NullPointerException nex) {
+            nex.printStackTrace();
+            throw nex;
+        } finally {
+            System.out.println("In the finally block");
         }
-
-        // Maps
-        Map<String, List<Student>> studentMap = new HashMap();
-        studentMap.put("musicStudents", students);
-
-        Student firstMusicStudent = studentMap.get("musicStudents").get(0);
-        firstMusicStudent.doWork();
-
-        // Arrays
-        Student[] studentsArray = new Student[1];
-        studentsArray[0] = student;
-
-        studentsArray[0].doWork();
-
-        // 2D Arrays
-        Student[][] students2DArray = new Student[1][1];
-        students2DArray[0][0] = student;
-
-        System.out.println(students2DArray[0][0].getName());
-
-        // Lambda
-        List<Student> result = students.stream()
-                .filter(lmbStudent -> ("wimal".equals(lmbStudent.getName())))
-                .collect(Collectors.toList());
-
-        System.out.println(result.size());
-
-        System.out.println(Student.getStudentCount());
     }
 }
 
